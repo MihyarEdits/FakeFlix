@@ -44,13 +44,13 @@ function App() {
     sciFi: []
   });
 
-  // Fetch content from TMDB
+  // Fetch detailed content from TMDB
   useEffect(() => {
-    const fetchContent = async () => {
+    const fetchContentWithDetails = async () => {
       try {
         setIsLoading(true);
         
-        // Fetch movies
+        // Enhanced movie fetching with more data
         const [
           trendingMovies,
           topRatedMovies,
@@ -59,53 +59,98 @@ function App() {
           comedyMovies,
           horrorMovies,
           romanceMovies,
-          documentaries
+          documentaries,
+          blockbusters,
+          awards,
+          imaxMovies
         ] = await Promise.all([
-          fetch(`${TMDB_BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=28`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=35`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=27`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=10749`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=99`).then(r => r.json())
+          fetch(`${TMDB_BASE_URL}/trending/movie/week?api_key=${TMDB_API_KEY}&page=1`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&page=1`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}&page=1`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=28&sort_by=vote_average.desc&vote_count.gte=1000`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=35&sort_by=popularity.desc`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=27&sort_by=vote_average.desc&vote_count.gte=500`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=10749&sort_by=popularity.desc`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=99&sort_by=vote_average.desc&vote_count.gte=100`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&sort_by=revenue.desc&vote_count.gte=2000`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&sort_by=vote_average.desc&vote_count.gte=5000&primary_release_date.gte=2015-01-01`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_keywords=158431|9715&sort_by=popularity.desc`).then(r => r.json()) // IMAX keywords
         ]);
 
-        // Fetch TV shows
+        // Enhanced TV shows fetching
         const [
           trendingTv,
           topRatedTv,
           popularTv,
           crimeTv,
           dramaTv,
-          sciFiTv
+          sciFiTv,
+          netflixOriginals,
+          limitedSeries
         ] = await Promise.all([
-          fetch(`${TMDB_BASE_URL}/trending/tv/week?api_key=${TMDB_API_KEY}`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/tv/top_rated?api_key=${TMDB_API_KEY}`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_genres=80`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_genres=18`).then(r => r.json()),
-          fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_genres=10765`).then(r => r.json())
+          fetch(`${TMDB_BASE_URL}/trending/tv/week?api_key=${TMDB_API_KEY}&page=1`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/tv/top_rated?api_key=${TMDB_API_KEY}&page=1`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}&page=1`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_genres=80&sort_by=vote_average.desc&vote_count.gte=500`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_genres=18&sort_by=popularity.desc`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_genres=10765&sort_by=vote_average.desc&vote_count.gte=300`).then(r => r.json()),
+          fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_networks=213&sort_by=popularity.desc`).then(r => r.json()), // Netflix network
+          fetch(`${TMDB_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_type=2&sort_by=vote_average.desc&vote_count.gte=100`).then(r => r.json()) // Limited series
         ]);
 
+        // Enhance content with 4K indicators and additional details
+        const enhanceContent = (content) => {
+          return content.map(item => ({
+            ...item,
+            // Add 4K indicator based on release date and popularity
+            has4K: item.vote_average >= 7.0 && item.vote_count >= 1000 && 
+                   new Date(item.release_date || item.first_air_date) >= new Date('2016-01-01'),
+            hasHDR: item.vote_average >= 8.0 && item.vote_count >= 2000,
+            hasIMAX: imaxMovies.results?.some(imax => imax.id === item.id) || false,
+            isBlockbuster: blockbusters.results?.some(block => block.id === item.id) || false,
+            quality: item.vote_average >= 8.5 ? 'Premium' : 
+                    item.vote_average >= 7.5 ? 'High' : 
+                    item.vote_average >= 6.5 ? 'Standard' : 'Basic',
+            // Add runtime estimation
+            estimatedRuntime: item.runtime || (item.title ? '120 min' : '45 min'),
+            // Add genre information
+            primaryGenre: item.genre_ids?.[0] ? getGenreName(item.genre_ids[0]) : 'Drama'
+          }));
+        };
+
+        const getGenreName = (genreId) => {
+          const genres = {
+            28: 'Action', 35: 'Comedy', 18: 'Drama', 27: 'Horror', 10749: 'Romance',
+            878: 'Sci-Fi', 53: 'Thriller', 16: 'Animation', 99: 'Documentary', 80: 'Crime',
+            12: 'Adventure', 14: 'Fantasy', 36: 'History', 10402: 'Music', 9648: 'Mystery',
+            10770: 'TV Movie', 10752: 'War', 37: 'Western', 10751: 'Family'
+          };
+          return genres[genreId] || 'Drama';
+        };
+
         setMovies({
-          trending: trendingMovies.results || [],
-          topRated: topRatedMovies.results || [],
-          upcoming: upcomingMovies.results || [],
-          action: actionMovies.results || [],
-          comedy: comedyMovies.results || [],
-          horror: horrorMovies.results || [],
-          romance: romanceMovies.results || [],
-          documentaries: documentaries.results || []
+          trending: enhanceContent(trendingMovies.results || []),
+          topRated: enhanceContent(topRatedMovies.results || []),
+          upcoming: enhanceContent(upcomingMovies.results || []),
+          action: enhanceContent(actionMovies.results || []),
+          comedy: enhanceContent(comedyMovies.results || []),
+          horror: enhanceContent(horrorMovies.results || []),
+          romance: enhanceContent(romanceMovies.results || []),
+          documentaries: enhanceContent(documentaries.results || []),
+          blockbusters: enhanceContent(blockbusters.results || []),
+          awards: enhanceContent(awards.results || []),
+          imax: enhanceContent(imaxMovies.results || [])
         });
 
         setTvShows({
-          trending: trendingTv.results || [],
-          topRated: topRatedTv.results || [],
-          popular: popularTv.results || [],
-          crime: crimeTv.results || [],
-          drama: dramaTv.results || [],
-          sciFi: sciFiTv.results || []
+          trending: enhanceContent(trendingTv.results || []),
+          topRated: enhanceContent(topRatedTv.results || []),
+          popular: enhanceContent(popularTv.results || []),
+          crime: enhanceContent(crimeTv.results || []),
+          drama: enhanceContent(dramaTv.results || []),
+          sciFi: enhanceContent(sciFiTv.results || []),
+          netflixOriginals: enhanceContent(netflixOriginals.results || []),
+          limitedSeries: enhanceContent(limitedSeries.results || [])
         });
 
         setIsLoading(false);
@@ -115,7 +160,7 @@ function App() {
       }
     };
 
-    fetchContent();
+    fetchContentWithDetails();
   }, []);
 
   // Search functionality
