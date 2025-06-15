@@ -33,7 +33,10 @@ function App() {
     comedy: [],
     horror: [],
     romance: [],
-    documentaries: []
+    documentaries: [],
+    blockbusters: [],
+    awards: [],
+    imax: []
   });
   const [tvShows, setTvShows] = useState({
     trending: [],
@@ -41,7 +44,9 @@ function App() {
     popular: [],
     crime: [],
     drama: [],
-    sciFi: []
+    sciFi: [],
+    netflixOriginals: [],
+    limitedSeries: []
   });
 
   // Fetch detailed content from TMDB
