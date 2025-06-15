@@ -592,7 +592,7 @@ export const VideoPlayer = ({ content, onClose }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const videoUrl = `https://www.youtube.com/embed/${content.videoKey}?autoplay=1&controls=1&modestbranding=1&rel=0`;
+  const videoUrl = `https://www.youtube.com/embed/${content.videoKey}?autoplay=1&controls=1&modestbranding=1&rel=0&hd=1`;
 
   return (
     <motion.div
@@ -604,10 +604,29 @@ export const VideoPlayer = ({ content, onClose }) => {
       {/* Close Button */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-60 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors"
+        className="absolute top-4 right-4 z-60 bg-black/70 text-white p-3 rounded-full hover:bg-black/90 transition-colors"
       >
         <X className="w-6 h-6" />
       </button>
+
+      {/* Quality Indicator */}
+      <div className="absolute top-4 left-4 z-60 flex space-x-2">
+        {content.has4K && (
+          <span className="bg-red-600 text-white px-3 py-2 rounded-full text-sm font-bold shadow-glow">
+            4K ULTRA HD
+          </span>
+        )}
+        {content.hasHDR && (
+          <span className="bg-purple-600 text-white px-3 py-2 rounded-full text-sm font-bold">
+            HDR10+
+          </span>
+        )}
+        {content.hasIMAX && (
+          <span className="bg-blue-600 text-white px-3 py-2 rounded-full text-sm font-bold">
+            IMAX ENHANCED
+          </span>
+        )}
+      </div>
 
       {/* Video Container */}
       <div className="relative w-full h-full flex items-center justify-center">
@@ -626,12 +645,30 @@ export const VideoPlayer = ({ content, onClose }) => {
         <h1 className="text-3xl font-bold text-white mb-2">
           {content.title || content.name}
         </h1>
-        <div className="flex items-center space-x-4 mb-4">
+        <div className="flex items-center space-x-4 mb-4 flex-wrap">
           <div className="flex items-center space-x-1">
             <Star className="w-5 h-5 text-yellow-400 fill-current" />
             <span className="text-white">{content.vote_average?.toFixed(1)}</span>
           </div>
-          <span className="bg-red-600 text-white px-2 py-1 rounded text-sm font-bold">4K UHD</span>
+          <div className="flex items-center space-x-1">
+            <Calendar className="w-5 h-5 text-gray-400" />
+            <span className="text-gray-300">
+              {(content.release_date || content.first_air_date)?.split('-')[0]}
+            </span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Clock className="w-4 h-4 text-gray-400" />
+            <span className="text-gray-300">{content.estimatedRuntime}</span>
+          </div>
+          <span className="bg-gray-700 text-white px-2 py-1 rounded text-sm">{content.primaryGenre}</span>
+          <span className={`px-2 py-1 rounded text-sm font-bold ${
+            content.quality === 'Premium' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-black' :
+            content.quality === 'High' ? 'bg-green-600 text-white' :
+            content.quality === 'Standard' ? 'bg-blue-600 text-white' :
+            'bg-gray-600 text-white'
+          }`}>
+            {content.quality} Quality
+          </span>
         </div>
         <p className="text-gray-300 max-w-2xl">
           {content.overview}
