@@ -456,7 +456,7 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
   return (
     <div className="relative z-10 -mt-32 pb-16">
       <ContentRow
-        title="Trending Now"
+        title="🔥 Trending Now"
         items={[...movies.trending, ...tvShows.trending]}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -464,7 +464,31 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
       
       <ContentRow
-        title="Top Rated Movies"
+        title="🏆 Award Winners & Critical Favorites"
+        items={movies.awards}
+        onPlay={onPlay}
+        onToggleMyList={onToggleMyList}
+        isInMyList={isInMyList}
+      />
+
+      <ContentRow
+        title="💎 4K Ultra HD Blockbusters"
+        items={movies.blockbusters?.filter(item => item.has4K)}
+        onPlay={onPlay}
+        onToggleMyList={onToggleMyList}
+        isInMyList={isInMyList}
+      />
+
+      <ContentRow
+        title="🎬 IMAX Enhanced Experience"
+        items={movies.imax}
+        onPlay={onPlay}
+        onToggleMyList={onToggleMyList}
+        isInMyList={isInMyList}
+      />
+      
+      <ContentRow
+        title="⭐ Top Rated Movies"
         items={movies.topRated}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -472,7 +496,7 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
       
       <ContentRow
-        title="Action & Adventure"
+        title="💥 Action & Adventure"
         items={movies.action}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -480,7 +504,7 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
       
       <ContentRow
-        title="Comedy Movies"
+        title="😂 Comedy Movies"
         items={movies.comedy}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -488,7 +512,23 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
 
       <ContentRow
-        title="Popular TV Shows"
+        title="📺 Netflix Originals"
+        items={tvShows.netflixOriginals}
+        onPlay={onPlay}
+        onToggleMyList={onToggleMyList}
+        isInMyList={isInMyList}
+      />
+
+      <ContentRow
+        title="🎭 Limited Series"
+        items={tvShows.limitedSeries}
+        onPlay={onPlay}
+        onToggleMyList={onToggleMyList}
+        isInMyList={isInMyList}
+      />
+      
+      <ContentRow
+        title="📈 Popular TV Shows"
         items={tvShows.popular}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -496,7 +536,7 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
       
       <ContentRow
-        title="Crime & Drama"
+        title="🕵️ Crime & Drama"
         items={[...tvShows.crime, ...tvShows.drama]}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -504,7 +544,7 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
       
       <ContentRow
-        title="Horror Movies"
+        title="👻 Horror Movies"
         items={movies.horror}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -512,7 +552,7 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
       
       <ContentRow
-        title="Romantic Movies"
+        title="💕 Romantic Movies"
         items={movies.romance}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -520,7 +560,7 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
       
       <ContentRow
-        title="Documentaries"
+        title="📚 Documentaries"
         items={movies.documentaries}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
@@ -528,8 +568,16 @@ export const ContentRows = ({ movies, tvShows, onPlay, onToggleMyList, isInMyLis
       />
       
       <ContentRow
-        title="Sci-Fi & Fantasy"
+        title="🚀 Sci-Fi & Fantasy"
         items={tvShows.sciFi}
+        onPlay={onPlay}
+        onToggleMyList={onToggleMyList}
+        isInMyList={isInMyList}
+      />
+
+      <ContentRow
+        title="🎬 Coming Soon"
+        items={movies.upcoming}
         onPlay={onPlay}
         onToggleMyList={onToggleMyList}
         isInMyList={isInMyList}
