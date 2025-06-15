@@ -217,11 +217,11 @@ export const HeroSection = ({ content, onPlay, onToggleMyList, isInMyList }) => 
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight hero-title">
             {content.title || content.name}
           </h1>
           
-          <div className="flex items-center space-x-4 mb-6">
+          <div className="flex items-center space-x-4 mb-6 flex-wrap">
             <div className="flex items-center space-x-1">
               <Star className="w-5 h-5 text-yellow-400 fill-current" />
               <span className="text-white font-medium">{content.vote_average?.toFixed(1)}</span>
@@ -232,11 +232,29 @@ export const HeroSection = ({ content, onPlay, onToggleMyList, isInMyList }) => 
                 {(content.release_date || content.first_air_date)?.split('-')[0]}
               </span>
             </div>
-            <span className="bg-red-600 text-white px-2 py-1 rounded text-sm font-bold">4K UHD</span>
-            <span className="bg-gray-700 text-white px-2 py-1 rounded text-sm">HD</span>
+            <div className="flex items-center space-x-1">
+              <Clock className="w-4 h-4 text-gray-400" />
+              <span className="text-gray-300">{content.estimatedRuntime}</span>
+            </div>
+            {content.has4K && (
+              <span className="bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-1 rounded-full text-sm font-bold shadow-glow">
+                4K ULTRA HD
+              </span>
+            )}
+            {content.hasHDR && (
+              <span className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-1 rounded-full text-sm font-bold">
+                HDR10+
+              </span>
+            )}
+            {content.hasIMAX && (
+              <span className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-1 rounded-full text-sm font-bold">
+                IMAX
+              </span>
+            )}
+            <span className="bg-gray-700 text-white px-2 py-1 rounded text-sm">{content.primaryGenre}</span>
           </div>
 
-          <p className="text-gray-300 text-lg mb-8 leading-relaxed max-w-xl">
+          <p className="text-gray-300 text-lg mb-8 leading-relaxed max-w-xl hero-description">
             {content.overview}
           </p>
 
@@ -245,10 +263,10 @@ export const HeroSection = ({ content, onPlay, onToggleMyList, isInMyList }) => 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => onPlay(content)}
-              className="flex items-center space-x-2 bg-white text-black px-8 py-3 rounded-lg font-bold text-lg hover:bg-gray-200 transition-colors"
+              className="flex items-center space-x-2 bg-white text-black px-8 py-3 rounded-lg font-bold text-lg hover:bg-gray-200 transition-colors shadow-lg"
             >
               <Play className="w-6 h-6 fill-current" />
-              <span>Play</span>
+              <span>Play {content.has4K ? 'in 4K' : ''}</span>
             </motion.button>
 
             <motion.button
