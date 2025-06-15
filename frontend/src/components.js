@@ -299,7 +299,7 @@ const ContentCard = ({ item, onPlay, onToggleMyList, isInMyList }) => {
 
   return (
     <motion.div
-      className="relative flex-shrink-0 w-48 cursor-pointer"
+      className="relative flex-shrink-0 w-48 cursor-pointer content-card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{ scale: 1.05, zIndex: 10 }}
@@ -312,21 +312,59 @@ const ContentCard = ({ item, onPlay, onToggleMyList, isInMyList }) => {
           className="w-full h-72 object-cover"
         />
         
+        {/* Quality Badges */}
+        <div className="absolute top-2 left-2 flex flex-col space-y-1">
+          {item.has4K && (
+            <span className="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold shadow-lg">
+              4K
+            </span>
+          )}
+          {item.hasHDR && (
+            <span className="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold shadow-lg">
+              HDR
+            </span>
+          )}
+          {item.hasIMAX && (
+            <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold shadow-lg">
+              IMAX
+            </span>
+          )}
+        </div>
+
+        {/* Quality Rating Badge */}
+        <div className="absolute top-2 right-2">
+          <span className={`px-2 py-1 rounded text-xs font-bold ${
+            item.quality === 'Premium' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-black' :
+            item.quality === 'High' ? 'bg-green-600 text-white' :
+            item.quality === 'Standard' ? 'bg-blue-600 text-white' :
+            'bg-gray-600 text-white'
+          }`}>
+            {item.quality}
+          </span>
+        </div>
+        
         <AnimatePresence>
           {isHovered && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/70 flex flex-col justify-end p-4"
+              className="absolute inset-0 bg-black/80 flex flex-col justify-end p-4"
             >
               <h3 className="text-white font-bold text-sm mb-2 line-clamp-2">
                 {item.title || item.name}
               </h3>
               
-              <div className="flex items-center space-x-1 mb-3">
-                <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                <span className="text-white text-xs">{item.vote_average?.toFixed(1)}</span>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-1">
+                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                  <span className="text-white text-xs">{item.vote_average?.toFixed(1)}</span>
+                </div>
+                <span className="text-gray-300 text-xs">{item.primaryGenre}</span>
+              </div>
+
+              <div className="text-gray-400 text-xs mb-3">
+                {(item.release_date || item.first_air_date)?.split('-')[0]} • {item.estimatedRuntime}
               </div>
 
               <div className="flex space-x-2">
@@ -334,7 +372,7 @@ const ContentCard = ({ item, onPlay, onToggleMyList, isInMyList }) => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => onPlay(item)}
-                  className="bg-white text-black p-2 rounded-full"
+                  className="bg-white text-black p-2 rounded-full hover:bg-gray-200 transition-colors"
                 >
                   <Play className="w-4 h-4 fill-current" />
                 </motion.button>
@@ -343,7 +381,7 @@ const ContentCard = ({ item, onPlay, onToggleMyList, isInMyList }) => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => onToggleMyList(item)}
-                  className="bg-gray-700 text-white p-2 rounded-full"
+                  className="bg-gray-700 text-white p-2 rounded-full hover:bg-gray-600 transition-colors"
                 >
                   {isInMyList(item) ? (
                     <Check className="w-4 h-4" />
